@@ -1,0 +1,23 @@
+MySQL Admin Database
+----------------------
+
+create database admindb;
+use admindb;
+drop table HR;
+CREATE TABLE HR (
+    employeeId INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    email VARCHAR(100),
+    department VARCHAR(50),
+    jobTitle VARCHAR(50),
+    dateOfJoining DATE,
+    dateOfBirth DATE,
+    phoneNo VARCHAR(15),
+    address VARCHAR(255),
+    hrPassword VARCHAR(100)
+);
+use admindb;
+insert into HR values("5001","Alex","Martin","alexm@natwest.com","Human Resources","HR Management", "2019-07-21", "1987-10-25", "9632587410","London","Password@123");
+use admindb;
+select * from HR;

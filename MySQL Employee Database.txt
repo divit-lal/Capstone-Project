@@ -1,0 +1,77 @@
+SQL Employee Database
+----------------------
+
+
+create database employeedb;
+
+use employeedb;
+drop table employees;
+CREATE TABLE employees (
+    employeeId INT AUTO_INCREMENT PRIMARY KEY,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    email VARCHAR(100),
+    department VARCHAR(50),
+    jobTitle VARCHAR(50),
+    dateOfJoining DATE,
+    dateOfBirth DATE,
+    phoneNo VARCHAR(15),
+    address VARCHAR(255),
+    empPassword VARCHAR(100),
+    AdpPortalAccess VARCHAR(50),
+    OutlookAccess VARCHAR(50),
+    WorkdayAccess VARCHAR(50),
+    SharedDriveAccess VARCHAR(50),
+    LiveEngageAccess VARCHAR(50),
+    lastWorkingDay DATE,
+    onNotice BOOLEAN
+);
+use employeedb;
+
+insert into employees values("1001","Ravi","Ranjan","ravi@gmail.com","Infomation Technology", "Software Engineer", "2021-05-15", "1994-11-26", "9874563210","Delhi","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-27',false);
+insert into employees values("1002","Rakesh","Kumar","rakesh@gmail.com","Finance", "Financial advisor", "2021-05-15", "1994-11-26", "9874563210","Delhi","India@123","Yes","Yes","Yes","Yes","Yes",'2023-11-20', false);
+insert into employees values("1003","Tim","Kook","tim@gmail.com","Infomation Technology", "Software Engineer", "2021-05-15", "1994-11-26", "9874563210","Delhi","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-26' , false);
+insert into employees values("1005","Mark","Henry","mark@gmail.com","Lending", "Investment Advisor", "2021-05-15", "1994-11-26", "9874563210","London","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-24' , true);
+insert into employees values("1006","Alex","Hill","alex@gmail.com","Finance", "Financial advisor", "2021-05-27", "1990-10-26", "7896541230","London","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-24' , true);
+insert into employees values("1007","David","Smith","david@gmail.com","Finance", "Financial advisor", "2021-05-27", "1990-10-26", "7896541230","London","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-25' , true);
+insert into employees values("1004","John","Smith","johns@gmail.com","Lending", "Investment Advisor", "2022-06-25", "1991-11-25", "7896541231","London","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-27' , true);
+insert into employees values("1008","Henry","Smith","henry@gmail.com","Lending", "Investment Advisor", "2022-06-25", "1991-11-25", "7896541231","London","India@123","Yes","Yes","Yes","Yes","Yes",'2023-10-26' , true);
+
+
+
+use employeedb;
+
+select * from employees;
+
+
+
+CREATE TABLE ex_employees (
+    employeeId INT,
+    firstName VARCHAR(50),
+    lastName VARCHAR(50),
+    email VARCHAR(100),
+    lastWorkingDay DATE,
+    onNotice BOOLEAN
+);
+use employeedb;
+select * from ex_employees;
+use employeedb;
+drop table ex_employees;
+DELIMITER //
+CREATE EVENT IF NOT EXISTS `move_to_ex_employees`
+ON SCHEDULE EVERY 1 MINUTE
+STARTS CURRENT_TIMESTAMP
+ENDS CURRENT_TIMESTAMP + INTERVAL 1 YEAR
+DO
+BEGIN
+    -- Move employees to ex-employees table
+    INSERT INTO ex_employees (employeeId, firstName, lastName, email, lastWorkingDay, onNotice)
+    SELECT employeeId, firstName, lastName, email, lastWorkingDay, onNotice
+    FROM employees
+    WHERE lastWorkingDay = CURDATE() AND onNotice = TRUE;
+    -- Delete the employees from the employees table
+    DELETE FROM employees
+    WHERE lastWorkingDay = CURDATE() AND onNotice = TRUE;
+END//
+DELIMITER ;
+DROP EVENT IF EXISTS moveEmployeesToExEmployees
